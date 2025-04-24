@@ -8,6 +8,7 @@
          coffeeShopId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "CoffeeShop",
+            required: false,
          },
       },
       {

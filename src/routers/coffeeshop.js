@@ -33,8 +33,11 @@ router.get("/coffee-shop/:id", async (req, res, next) => {
 
 router.post("/coffee-shop", upload.single("logo"), async (req, res, next) => {
    try {
-      // console.log(req.file);
-      const cShop = new CoffeeShop({ ...req.body, logo: req.file?.filename });
+      // Access data from form-data (req.body) instead of query params
+      const cShop = new CoffeeShop({
+         ...req.body,
+         logo: req.file?.filename
+      });
       await cShop.save();
       res.status(201).send({ data: cShop });
    } catch (error) {
@@ -53,4 +56,5 @@ router.delete("/coffee-shop/:id", async (req, res) => {
       res.status(500).send({ error: "Error: " + error.message });
    }
 });
+
 export default router;

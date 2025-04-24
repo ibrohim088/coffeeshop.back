@@ -1,11 +1,13 @@
 import multer from "multer";
-export const upload = multer({
-   storage: multer.diskStorage({
-      destination: (req , file , cb) => {
-         cb(null, 'upload/');
-      },
-      filename: (req , file , cb) => {
-         cb(null, Date.now() + '-' + file.originalname);
-      }
-   })
-})
+import path from "path";
+
+const storage = multer.diskStorage({
+   destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // ✅ standardized path
+   },
+   filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname));
+   }
+});
+
+export const upload = multer({ storage });

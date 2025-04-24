@@ -13,7 +13,7 @@ const app = express();
 
 app.use(cors());
 
-app.use(express.static("uploads"));
+app.use(express.static("upload"));
 app.use(express.json())
 db()
 

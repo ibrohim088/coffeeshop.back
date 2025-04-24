@@ -16,13 +16,8 @@ router.get("/coffee", async (req, res) => {
       }
       console.log(q);
       const coffee = await Coffee.find(q);
-      //   .populate
-      //     [
-      //   { path: "categoryId", select: "title -_id description" },
-      // ]
-      //   ();
+
       res.status(200).send({ data: coffee });
-      // next()
    } catch (error) {
       res.status(500).send("Error: " + error.message);
    }
@@ -37,28 +32,28 @@ router.get("/coffee/:id", async (req, res, next) => {
    }
 });
 
-router.post("/coffee", upload.array("images"), async (req, res) => {
+router.post("/coffee", upload.single("image"), async (req, res) => {
    try {
-      const { coffeeShopId, name, price, images } = req.body;
+      const { coffeeShopId, name, price } = req.body;
 
-      if (!coffeeShopId) {
-         return res.status(400).send({ message: "coffeeShopId is required" });
-      }
+      // Debug print
+      console.log("Received coffeeShopId:", coffeeShopId);
 
       const coffeeShop = await CoffeeShop.findById(coffeeShopId);
+
       if (!coffeeShop) {
          return res.status(404).send({ message: "Coffee shop not found" });
       }
 
-      if (images.length === 0) {
-         return res.status(400).send({ message: "At least one image is required" });
+      if (!req.file) {
+         return res.status(400).send({ message: "Image file is required" });
       }
 
       const coffee = new Coffee({
          name,
          price,
          coffeeShopId,
-         images,
+         image: `uploads/${req.file.filename}`,
       });
 
       await coffee.save();
@@ -69,6 +64,7 @@ router.post("/coffee", upload.array("images"), async (req, res) => {
       res.status(500).send("Error: " + error.message);
    }
 });
+
 
 router.delete("/coffee/:id", async (req, res) => {
    try {
