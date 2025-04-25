@@ -9,8 +9,9 @@ const User = mongoose.Schema({
       type: mongoose.SchemaTypes.String,
       required: true,
       unique: true,
-      match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      match: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
    },
+   
    password:{
       type: mongoose.SchemaTypes.String,
       required: true,

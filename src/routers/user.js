@@ -81,70 +81,51 @@ router.post('/login', async (req, res) => {
    }
 });
 
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
    try {
-      const userId = req.params.id;
+       const id = req.params.id
+       const users = await UserModel.findByIdAndDelete(id)
 
-      if (!userId ) {
-         return res.status(400).json({
-            success: false,
-            message: 'Invalid user ID format',
-         });
-      }
+       if (!users) {
+           return res.status(404).json({ message: 'User not found' })
+       }
 
-      const existingUser = await UserModel.findById(userId);
-      if (!existingUser) {
-         return res.status(404).json({
-            success: false,
-            message: 'User not found',
-         });
-      }
-
-      const deletedUser = await UserModel.findByIdAndDelete(userId);
-
-      res.status(200).json({
-         success: true,
-         message: 'User deleted successfully',
-         data: deletedUser,
-      });
+       res.status(200).json({ message: 'User deleted', data: users });
    } catch (error) {
-      res.status(500).json({
-         success: false,
-         message: 'Server error while deleting user',
-         error: error.message,
-      });
+       res.status(500).json({ message: error.message });
    }
-});
+})
 
-router.patch("/:id", async (req, res) => {
-   try {
-     const isValid = httpValidator(
-       { body: req.body, params: req.params },
-       patchSchema,
-       res
-     );
-     if (!isValid) return;
+
+// router.patch("/:id", async (req, res) => {
+//    try {
+//      const isValid = httpValidator(
+//        { body: req.body, params: req.params },
+//        patchSchema,
+//        res
+//      );
+//      if (!isValid) return;
  
-     if (req?.body?.password) {
-       req.body.password = bcrypt.hashSync(req.body?.password, 10);
-     }
+//      if (req?.body?.password) {
+//        req.body.password = bcrypt.hashSync(req.body?.password, 10);
+//      }
  
-     if (req.body?.email) {
-       const emailExists = await UserModel.exists({
-         email: req.body?.email,
-         _id: { $ne: new Types.ObjectId(req.params.id) },
-       });
-       if (emailExists)
-         return res.status(400).json({ msg: "Email already exists" });
-     }
+//      if (req.body?.email) {
+//        const emailExists = await UserModel.exists({
+//          email: req.body?.email,
+//          _id: { $ne: new Types.ObjectId(req.params.id) },
+//        });
+//        if (emailExists)
+//          return res.status(400).json({ msg: "Email already exists" });
+//      }
  
-     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {
-       new: true,
-     });
-     res.status(200).json({ message: "Updated", user });
-   } catch (error) {
-     res.status(400).json({ msg: error.message });
-   }
- });
+//      const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {
+//        new: true,
+//      });
+//      res.status(200).json({ message: "Updated", user });
+//    } catch (error) {
+//      res.status(400).json({ msg: error.message });
+//    }
+//  });
 
 export default router;
