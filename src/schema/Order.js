@@ -15,6 +15,7 @@ const orderSchema = new mongoose.Schema(
         coffeeShop: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "CoffeeShop",
+          required: true,
         }, 
         status: {
           type: String,
@@ -24,6 +25,11 @@ const orderSchema = new mongoose.Schema(
         date: {
           type: Date,
           default: Date.now,
+        },
+        price: {
+          type: Number,
+          ref: "Coffee",
+          required: true,
         },
       },
    {

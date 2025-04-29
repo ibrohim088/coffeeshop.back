@@ -15,7 +15,6 @@ const User = mongoose.Schema({
    password:{
       type: mongoose.SchemaTypes.String,
       required: true,
-      select: false,
       // minlength: 8,
       // maxlength: 100,
       // validate: {
