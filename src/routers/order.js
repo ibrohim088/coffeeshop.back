@@ -67,15 +67,15 @@ router.post('/orders', async (req, res) => {
  */
 router.delete('/orders/:id', async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.query; // 👈✅ GET FROM QUERY, not body!
 
     if (!userId) {
-      return res.status(400).json({ error: 'userId is required in request body' });
+      return res.status(400).json({ error: 'userId is required in query params' });
     }
 
     const deleted = await Order.findOneAndDelete({
       _id: req.params.id,
-      user: userId,
+      user: userId, // Assuming your Order schema has a "user" field referring to user ID
     });
 
     if (!deleted) {

@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const coffeeShopSchema = new mongoose.Schema(
    {
-      name: { type: String, required: false },
-      logo: { type: String },
+      name: { type: String, required: true },
+      logo: { type: String , required: true },
    },
    {
       versionKey: false,
